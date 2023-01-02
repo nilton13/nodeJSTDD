@@ -1,0 +1,14 @@
+{
+  "name": "NodeTDDUdemy",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "test": "jest"
+  },
+  "devDependencies": {
+    "eslint": "^8.31.0",
+    "jest": "23.6.0",
+    "supertest": "3.3.0"
+  }
+}
