@@ -5,7 +5,7 @@ module.exports = (app) =>{
                 if(result.error) return res.status(400).json(result);
 
                 return res.status(201).json(result[0]);
-            });
+            }).catch(err => res.status(400).json({ error: err.message }))
     };
 
     const findAll = (req,res) =>{
