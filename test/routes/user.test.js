@@ -5,6 +5,8 @@ const jwt = require('jwt-simple');
 
 const mail = `${Date.now()}@email.com`;
 
+const MAIN_ROOT = '/v1/users';
+
 //Criando usuário antes de qualquer test
 let user;
 
@@ -15,7 +17,7 @@ beforeAll( async() =>{
 });
 
 test('Deve listar todos o usuários', () =>{
-    return request(app).get('/users')
+    return request(app).get(MAIN_ROOT)
         .set('authorization',`bearer ${user.token}`) // Adicionando token a requisição
         .then((res) =>{
             expect(res.status).toBe(200);
@@ -25,7 +27,7 @@ test('Deve listar todos o usuários', () =>{
 });
 
 test('Deve inserir usuário com sucesso', () =>{
-    return request(app).post('/users')
+    return request(app).post(MAIN_ROOT)
         .send({ name:'Walter Mitty', email: mail,password:'123456' })
         .set('authorization',`bearer ${user.token}`)
         .then((res) =>{
@@ -36,7 +38,7 @@ test('Deve inserir usuário com sucesso', () =>{
 });
 
 test('Deve armazenar uma senha criptograda', async () =>{
-    const res = await request(app).post('/users')
+    const res = await request(app).post(MAIN_ROOT)
         .send({ name:'Walter Mitty', email: `${Date.now()}@email.com`,password:'123456' })
         .set('authorization',`bearer ${user.token}`)
     expect(res.status).toBe(201);
@@ -49,7 +51,7 @@ test('Deve armazenar uma senha criptograda', async () =>{
 
 //Testes de validação de usuário
 test('Não deve inserir usuário sem nome', () => {
-    return request(app).post('/users')
+    return request(app).post(MAIN_ROOT)
         .send({ email: 'nilton@teste.com', password: '123456' })
         .set('authorization',`bearer ${user.token}`)
         .then((res) =>{
@@ -59,7 +61,7 @@ test('Não deve inserir usuário sem nome', () => {
 });
 
 test('Não deve inserir usuário sem email', async () =>{
-    const result = await request(app).post('/users')
+    const result = await request(app).post(MAIN_ROOT)
         .send({ name:'Walter Mitty', password:'123456' })
         .set('authorization',`bearer ${user.token}`)
         expect(result.status).toBe(400);
@@ -67,7 +69,7 @@ test('Não deve inserir usuário sem email', async () =>{
 });
 
 test('Não deve inserir usuário sem senha', (done) => {
-    request(app).post('/users')
+    request(app).post(MAIN_ROOT)
         .send({ name:'Walter Mitty', email: 'nilton@teste.com'})
         .set('authorization',`bearer ${user.token}`)
         .then((res) =>{
@@ -79,7 +81,7 @@ test('Não deve inserir usuário sem senha', (done) => {
 });
 
 test('Não deve inserir usuário com Email existente',() =>{
-    return request(app).post('/users')
+    return request(app).post(MAIN_ROOT)
         .send({ name:'Walter Mitty', email: mail,password:'123456' })
         .set('authorization',`bearer ${user.token}`)
         .then((res) =>{
