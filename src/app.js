@@ -19,9 +19,11 @@ app.get('/',(req,res) =>{
     res.status(200).send();
 });
 
+
 app.use((err,res,req,next) =>{
     const { name,message,stack } = err;
     if(name === 'ValidationError') res.status(400).json({ error: message });
+    if(name === 'RecursoIndevidoError') res.status(403).json({ error: message });
     else res.status(500).json({ name,message,stack });
     next(err);
 })

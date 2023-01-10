@@ -4,6 +4,14 @@ module.exports = (app) =>{
 
     const router = express.Router();
 
+    router.param('id', (req,res,next) => {
+        app.services.account.find({ id: req.params.id })
+        .then((acc) =>{
+            if(acc.user_id != req.user.id) res.status(403).json({ error:'Este recurso não pertence ao usuário' }) //throw new RecursoIndevidoError();
+            else next()
+        }).catch(err => next(err));
+    })
+
     router.post('/',(req,res) =>{
         app.services.account.save({...req.body, user_id: req.user.id})
             .then((result) =>{
@@ -20,7 +28,12 @@ module.exports = (app) =>{
 
     router.get('/:id',(req,res) =>{
         app.services.account.find({id: req.params.id})
-            .then((result) => res.status(200).json(result))
+            .then((result) => {
+                if(result.user_id != req.user.id){
+                    return res.status(403).json({ error:'Este recurso não pertence ao usuário' })
+                }
+                return res.status(200).json(result)
+            })
     });
 
     router.put('/:id',(req,res) =>{
