@@ -8,8 +8,7 @@ module.exports = {
             password: 'docker',
             database: 'nodejstdd'
         },
-        migrations:{
-            directory: 'src/migrations',
-        }
+        migrations:{ directory: 'src/migrations' },
+        seeds: { directory: 'src/seeds' }
     }
 }
